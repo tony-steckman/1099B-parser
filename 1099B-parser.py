@@ -1,5 +1,6 @@
 import argparse
 import csv
+from datetime import datetime
 import tabula
 
 """requirements.txt
@@ -20,9 +21,17 @@ dfs = tabula.read_pdf(args.input_fn, pages="all", stream=True, lattice=False)
 print('converting...')
 for df in dfs:
     col = df['VOID CORRECTED']
-    dates = col[7]
-    prices = col[9]
+    rows = col.values.flatten().tolist()
+    row_idx = 0
+    for row in rows:
+        if str(row).startswith('1b'):
+            dates = col[row_idx + 1]
+        if str(row).startswith("PAYER’S TIN"):
+            prices = col[row_idx + 1]
+        row_idx += 1
     dates = dates.split(' ')
+    dates[0] = datetime.strptime(dates[0], '%Y-%m-%d').strftime('%m/%d/%Y')
+    dates[1] = datetime.strptime(dates[1], '%Y-%m-%d').strftime('%m/%d/%Y')
     prices = prices.split(' ')
     dt_acquired, dt_sold = dates[0], dates[1]
     sale_price, cost = prices[1], prices[3]
