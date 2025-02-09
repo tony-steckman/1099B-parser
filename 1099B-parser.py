@@ -16,7 +16,7 @@ table = []
 table.append(['Owner', 'Description', 'DtAcquired', 'DtSold', 'SalesPrice', 'Cost'])
 
 print('reading...')
-dfs = tabula.read_pdf(args.input_fn, pages="1-2", stream=True, lattice=False)
+dfs = tabula.read_pdf(args.input_fn, pages="all", stream=True, lattice=False)
 print('converting...')
 for df in dfs:
     col = df['VOID CORRECTED']
